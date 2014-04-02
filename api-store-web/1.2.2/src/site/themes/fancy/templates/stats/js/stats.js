@@ -125,53 +125,56 @@ var drawAPIResponseFaultCountTable = function(from,to){
 
 
 
-// var drawAppAPICallType = function(from,to){
+var drawAppAPICallType = function(from,to){
 
-//     var fromDate = from;
-//     var toDate = to;
-//     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getAppApiCallType",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
-//         function (json) {
-//             if (!json.error) {
-//                 $('#getAppApiCallTypeTable').find("tr:gt(0)").remove();
-//                 var length = json.usage.length;
-//                 $('#getAppApiCallTypeTable').show();
-//                 for (var i = 0; i < json.usage.length; i++) {
-//                     $('#getAppApiCallTypeTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' +json.usage[i].apiCallTypeArray[0].apiName + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[0].callType[0] + '</td></tr>'));
-//                     if(json.usage[i].apiCallTypeArray[0].callType.length > 1){
-//                         for(var k =0 k < json.usage[i].apiCallTypeArray[0].callType.length ; k++){
-//                             $('#getAppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +"" + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[0].callType[k] + '</td></tr>'));
-//                         }
-//                     }
-//                     if(json.usage[i].apiCallTypeArray.length > 1){
-//                         for(var j = 1 ; j< json.usage[i].apiCallTypeArray.length ; i++){
-//                             $('#getAppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +json.usage[i].apiCallTypeArray[j].apiName + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[j].callType[0] + '</td></tr>'));
-//                             if(json.usage[i].apiCallTypeArray[j].callType.length > 1){
-//                                 for(var k =1 k < json.usage[i].apiCallTypeArray[j].callType.length ; k++){
-//                                     $('#getAppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +"" + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[j].callType[k] + '</td></tr>'));
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }          
-//                 if (length == 0) {
-//                     $('#getAppApiCallTypeTable').hide();
-//                     $('#tempLoadingSpace').html('');
-//                     $('#tempLoadingSpace').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
+    var fromDate = from;
+    var toDate = to;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getAppApiCallType",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
+        function (json) {
+            if (!json.error) {
+                $('#AppApiCallTypeTable').find("tr:gt(0)").remove();
+                var length = json.usage.length;
+                $('#AppApiCallTypeTable').show();
+              for (var i = 0; i < json.usage.length; i++) {
+                    $('#AppApiCallTypeTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].apiCallTypeArray[0].apiName + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[0].callType[0] + '</td></tr>'));
+                    if(json.usage[i].apiCallTypeArray[0].callType.length > 1){
+                        for(var k =1 ; k < json.usage[i].apiCallTypeArray[0].callType.length ; k++){
+                             $('#AppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +"" + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[0].callType[k] + '</td></tr>'));
+                         }
+                     }
+                    if(json.usage[i].apiCallTypeArray.length > 1){
+                        for(var j = 1 ; j< json.usage[i].apiCallTypeArray.length ; j++){
+                            $('#AppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +json.usage[i].apiCallTypeArray[j].apiName + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[j].callType[0] + '</td></tr>'));
+                            if(json.usage[i].apiCallTypeArray[j].callType.length > 1){
+                                for(var k =1 ; k < json.usage[i].apiCallTypeArray[j].callType.length ; k++){
+                                    $('#AppApiCallTypeTable').append($('<tr><td>' + "" + '</td><td>' +"" + '</td><td class="tdNumberCell">' + json.usage[i].apiCallTypeArray[j].callType[k] + '</td></tr>'));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (length == 0) {
+                    $('#AppApiCallTypeTable').hide();
+                    $('#tempLoadingSpace').html('');
+                    $('#tempLoadingSpace').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
 
-//                 }else{
-//                     $('#tempLoadingSpace').hide();
-//                 }
+                }else{
+                    $('#tempLoadingSpace').hide();
+                }
 
-//             } else {
-//                 if (json.message == "AuthenticateError") {
-//                     jagg.showLogin();
-//                 } else {
-//                     jagg.message({content:json.message,type:"error"});
-//                 }
-//             }
-//             t_on['tempLoadingSpace'] = 0;
-//         }, "json");
-// }
+            } else {
+                if (json.message == "AuthenticateError") {
+                    jagg.showLogin();
+                } else {
+                    jagg.message({content:json.message,type:"error"});
+                }
+            }
+            t_on['tempLoadingSpace'] = 0;
+        }, "json");
+}
+
+
+
 
 
 
@@ -215,7 +218,6 @@ var drawAppAPIUsage = function(from,to){
             t_on['tempLoadingSpace'] = 0;
         }, "json");
 }
-
 
 
 
@@ -266,7 +268,11 @@ var drawAppUsers = function(from,to){
                 var length = json.usage.length;
                 $('#appUsersTable').show();
                 for (var i = 0; i < json.usage.length; i++) {
-                    $('#appUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].subscriber + '</td></tr>'));
+                    $('#appUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userArray[0] + '</td></tr>'));
+                        if(json.usage[i].userArray.length > 1){
+                     for (var j =1 ; j < json.usage[i].userArray.length; j++) {
+                         $('#PerAppAPIFaultCountTable').append($('<tr><td>' + "" + '</td><td>' + "" + '</td><td class="tdNumberCell">' + json.usage[i].userArray[j] + '</td></tr>'));
+                } }
                 }
                 if (length == 0) {
                     alert("drawAppUsers length 0");

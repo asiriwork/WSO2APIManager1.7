@@ -35,9 +35,7 @@ function getFirstAccessTime(providerName, server) {
 }
 
 
-
 function getAppApiCallType(subscriberName,from,to, server) {
-    log.info("getAppApiCallType");
     var usage = [];
     var usageout = [];
     try {
@@ -46,20 +44,18 @@ function getAppApiCallType(subscriberName,from,to, server) {
             log.debug("getAppApiCallType for : " + server);
         }
         if (usage == null) {
-            log.info("getAppApiCallType usage null");
             return {
                 error:true
             };
 
         } else {
-            log.info("getAppApiCallType usage not null");
+
             return {
                 error:false,
                 usage:usage
             };
         }
     } catch (e) {
-        log.info("getAppApiCallType exception");
         log.error(e.message);
         return {
             error:e,
@@ -68,6 +64,10 @@ function getAppApiCallType(subscriberName,from,to, server) {
         };
     }
 }
+
+
+
+
 
 function getPerAppAPIFaultCount(subscriberName,from,to, server) {
     var usage = [];

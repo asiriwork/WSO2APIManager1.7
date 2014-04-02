@@ -43,6 +43,32 @@ log = new Log();
             }
         }
         print(obj);
+
+        } else if (action === "getAppApiCallType") {
+        mod = jagg.module("statistics");
+        var subscriber = jagg.getUser().username;
+        var currentLocation = request.getParameter("currentLocation");
+        var from = request.getParameter("fromDate");
+        var to = request.getParameter("toDate");
+        //Need to change this part . Currentloaction ?? 
+        if (currentLocation.indexOf("all-statistics") >= 0) {
+            result = mod.getAppApiCallType(allProviders,from,to);
+        } else {
+            result = mod.getAppApiCallType(subscriber,from,to);
+        }
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false,
+                usage:result.usage
+            }
+        }
+        print(obj);
+        
     } else if (action === "getProviderAPIUsage") {
         mod = jagg.module("statistics");
         var subscriber = jagg.getUser().username;
@@ -145,29 +171,7 @@ log = new Log();
 
   
 
-    }else if (action === "getAppApiCallType") {
-        mod = jagg.module("statistics");
-        var subscriber = jagg.getUser().username;
-        var currentLocation = request.getParameter("currentLocation");
-        var from = request.getParameter("fromDate");
-        var to = request.getParameter("toDate");
-        if (currentLocation.indexOf("all-statistics") >= 0) {
-            result = mod.getAppApiCallType(allProviders,from,to);
-        } else {
-            result = mod.getAppApiCallType(subscriber,from,to);
-        }
-        if (result.error == "true") {
-            obj = {
-                error:result.error,
-                message:msg.error.backendError(action)
-            };
-        } else {
-            obj = {
-                error:false,
-                usage:result.usage
-            }
-        }
-        print(obj);
+   
 
     }else if (action === "getFirstAccessTime") {
         mod = jagg.module("statistics");

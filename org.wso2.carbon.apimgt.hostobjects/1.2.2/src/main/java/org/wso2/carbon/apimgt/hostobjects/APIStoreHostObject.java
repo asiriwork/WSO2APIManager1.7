@@ -410,10 +410,9 @@ public class APIStoreHostObject extends ScriptableObject {
         String toDate = (String) args[2];
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient(((APIStoreHostObject) thisObj).getUsername());
-            //list = client.getUsageByAPIs(subscriberName, fromDate, toDate, 10);
             list = client.getAppRegisteredUsers(subscriberName);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            handleException("Error while invoking APIUsageStatisticsClient for PerAppSubscribers", e);
+            handleException("Error while invoking APIUsageStatisticsClient for ProviderAPIUsage", e);
         }
 
         Iterator it = null;
@@ -421,47 +420,38 @@ public class APIStoreHostObject extends ScriptableObject {
             it = list.iterator();
         }
 
+        int i = 0;
         if (it != null) {
             // Sort API Usage by Application Name
-            Map<String, List<AppRegisteredUsersDTO>> subscriberByAppSorter = new HashMap<String, List<AppRegisteredUsersDTO>>();
+
+
+            Map<String, NativeArray> appUsersMap = new HashMap<String, NativeArray>();
 
             while (it.hasNext()) {
-                AppRegisteredUsersDTO subscribers = (AppRegisteredUsersDTO) it.next();
+                AppRegisteredUsersDTO appUser = (AppRegisteredUsersDTO) it.next();
 
-                // Application already encountered
-                List<AppRegisteredUsersDTO> currentSubscribers = subscriberByAppSorter.get(subscribers.getappName());
 
-                if (null == currentSubscribers) {
-                    currentSubscribers = new ArrayList<AppRegisteredUsersDTO>();
-                    subscriberByAppSorter.put(subscribers.getappName(), currentSubscribers);
-                }
+                if (appUsersMap.containsKey(appUser.getappName()) && appUsersMap != null) {
+                    NativeArray userList = appUsersMap.get(appUser.getappName());
 
-                currentSubscribers.add(subscribers);
-            }
+                    userList.put(userList.size(), userList, appUser.getUser());
+                } else {
 
-            int i = 0;  // NativeArray index
-            // Populate NativeArray with sorted API Usage details
-            for (Map.Entry<String, List<AppRegisteredUsersDTO>> entry : subscriberByAppSorter.entrySet()) {
-                List<AppRegisteredUsersDTO> dtoList = entry.getValue();
-
-                boolean hasFoundFirstRow = false;
-
-                for (AppRegisteredUsersDTO subscriber : dtoList) {
-                    NativeObject row = new NativeObject();
-
-                    if (!hasFoundFirstRow) { // First entry in List
-                        row.put("appName", row, entry.getKey());
-                        hasFoundFirstRow = true;
-                    } else {  // Not first entry in List
-                        row.put("appName", row, " "); // Add blank
-                    }
-
-                    row.put("subscriber", row, subscriber.getUser());
-
-                    myn.put(i, myn, row);
-                    i++;
+                    NativeArray userList = new NativeArray(0);
+                    userList.put(0, userList, appUser.getUser());
+                    appUsersMap.put(appUser.getappName(), userList);
                 }
             }
+
+            for (Map.Entry entry : appUsersMap.entrySet()) {
+                NativeObject row = new NativeObject();
+                row.put("appName", row, entry.getKey());
+                row.put("userArray", row, entry.getValue());
+
+                myn.put(i, myn, row);
+                i++;
+            }
+
         }
         return myn;
     }
@@ -1856,7 +1846,7 @@ public class APIStoreHostObject extends ScriptableObject {
             if (apiConsumer.isTierDeneid(tier)) {
                 throw new APIManagementException("Tier " + tier + " is not allowed for user " + userId);
             }
-	    	/* Tenant based validation for subscription*/
+            /* Tenant based validation for subscription*/
             String userDomain = MultitenantUtils.getTenantDomain(userId);
             boolean subscriptionAllowed = false;
             if (!userDomain.equals(tenantDomain)) {
