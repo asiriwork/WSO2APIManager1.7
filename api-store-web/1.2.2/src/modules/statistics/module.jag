@@ -1,7 +1,7 @@
 <%
 jagg.module("statistics", {
 
-	getFirstAccessTime:function () {
+    getFirstAccessTime:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getFirstAccessTime.apply(this, arguments);
     },getProviderAPIUsage:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIUsage.apply(this, arguments);
@@ -9,8 +9,8 @@ jagg.module("statistics", {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getPerAppSubscribers.apply(this, arguments);
     },getPerAppAPIFaultCount:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getPerAppAPIFaultCount.apply(this, arguments);
-    },getPerAppAPICallType:function () {
-        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getPerAppAPICallType.apply(this, arguments);
+    },getAppApiCallType:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getAppApiCallType.apply(this, arguments);
     },getTopAppUsers:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getTopAppUsers.apply(this, arguments);
     }

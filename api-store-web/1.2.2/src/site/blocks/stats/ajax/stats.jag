@@ -1,5 +1,6 @@
 <%
 include("/jagg/jagg.jag");
+log = new Log();
 
 (function () {
     response.contentType = "application/json; charset=UTF-8";
@@ -44,7 +45,7 @@ include("/jagg/jagg.jag");
         print(obj);
     } else if (action === "getProviderAPIUsage") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var subscriber = jagg.getUser().username;
         var currentLocation = request.getParameter("currentLocation");
         var from = request.getParameter("fromDate");
         var to = request.getParameter("toDate");
@@ -52,7 +53,32 @@ include("/jagg/jagg.jag");
         if (currentLocation.indexOf("all-statistics") >= 0) {
             result = mod.getProviderAPIUsage(allProviders,from,to);
         } else {
-            result = mod.getProviderAPIUsage(provider,from,to);
+            result = mod.getProviderAPIUsage(subscriber,from,to);
+        }
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false,
+                usage:result.usage
+            }
+        }
+        print(obj);
+
+    } else if (action === "getPerAppAPIFaultCount") {
+        mod = jagg.module("statistics");
+        var subscriber = jagg.getUser().username;
+        var currentLocation = request.getParameter("currentLocation");
+        var from = request.getParameter("fromDate");
+        var to = request.getParameter("toDate");
+        //Need to change this part . Currentloaction ?? 
+        if (currentLocation.indexOf("all-statistics") >= 0) {
+            result = mod.getPerAppAPIFaultCount(allProviders,from,to);
+        } else {
+            result = mod.getPerAppAPIFaultCount(subscriber,from,to);
         }
         if (result.error == "true") {
             obj = {
@@ -95,14 +121,14 @@ include("/jagg/jagg.jag");
 
     } else if (action === "getPerAppSubscribers") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var subscriber = jagg.getUser().username;
         var currentLocation = request.getParameter("currentLocation");
         var from = request.getParameter("fromDate");
         var to = request.getParameter("toDate");
         if (currentLocation.indexOf("all-statistics") >= 0) {
             result = mod.getPerAppSubscribers(allProviders,from,to);
         } else {
-            result = mod.getPerAppSubscribers(provider,from,to);
+            result = mod.getPerAppSubscribers(subscriber,from,to);
         }
         if (result.error == "true") {
             obj = {
@@ -117,38 +143,18 @@ include("/jagg/jagg.jag");
         }
         print(obj);
 
-    }else if (action === "getPerAppAPIFaultCount") {
-        mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
-        var currentLocation = request.getParameter("currentLocation");
-        if (currentLocation.indexOf("all-statistics") >= 0) {
-            result = mod.getPerAppAPIFaultCount(allProviders);
-        } else {
-            result = mod.getPerAppAPIFaultCount(provider);
-        }
-        if (result.error == "true") {
-            obj = {
-                error:result.error,
-                message:msg.error.backendError(action)
-            };
-        } else {
-            obj = {
-                error:false,
-                usage:result.usage
-            }
-        }
-        print(obj);
+  
 
-    }else if (action === "getPerAppAPICallType") {
+    }else if (action === "getAppApiCallType") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var subscriber = jagg.getUser().username;
         var currentLocation = request.getParameter("currentLocation");
         var from = request.getParameter("fromDate");
         var to = request.getParameter("toDate");
         if (currentLocation.indexOf("all-statistics") >= 0) {
-            result = mod.getPerAppAPICallType(allProviders,from,to);
+            result = mod.getAppApiCallType(allProviders,from,to);
         } else {
-            result = mod.getPerAppAPICallType(provider,from,to);
+            result = mod.getAppApiCallType(subscriber,from,to);
         }
         if (result.error == "true") {
             obj = {

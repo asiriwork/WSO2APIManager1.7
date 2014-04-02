@@ -393,7 +393,7 @@ public class APIUsageStatisticsClient {
         }
     }
 
-    public List<APIUsageDTO> perAppPerAPIUsage(String subscruberName, String fromDate, String toDate, int limit)
+    public List<APIUsageDTO> perAppPerAPIUsage(String subscriberName, String fromDate, String toDate, int limit)
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryBetweenTwoDays(
@@ -401,7 +401,7 @@ public class APIUsageStatisticsClient {
         Collection<APIUsage> usageData = getUsageData(omElement);
 
 
-        List<String> subscriberApps = getAppsbySubscriber(subscruberName);
+        List<String> subscriberApps = getAppsbySubscriber(subscriberName);
 
         List<APIUsageDTO> perAppUsageList = new ArrayList<APIUsageDTO>();
         APIUsageDTO apiUsageDTO;
@@ -430,7 +430,7 @@ public class APIUsageStatisticsClient {
                 }
             }
         }
-        return getAPIUsageTopEntries(perAppUsageList, limit);
+        return perAppUsageList;
     }
 
     private List<String> getAppsbySubscriber(String subscriberName) throws APIMgtUsageQueryServiceClientException {

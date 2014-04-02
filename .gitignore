@@ -5,7 +5,7 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 *.class
-
+build.xml
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
