@@ -20,6 +20,10 @@ package org.wso2.carbon.apimgt.usage.client;
 public final class APIUsageStatisticsClientConstants {
 
 
+    public static final String API_REQUEST_SUMMARY = "API_REQUEST_SUMMARY";
+
+    public static final String CONSUMERKEY = "consumerkey";
+
     public static final String API_VERSION_SERVICE_TIME_SUMMARY = "API_RESPONSE_SUMMARY";
 
     public static final String API_VERSION_SERVICE_TIME_SUMMARY_INDEX = "APIVersionServiceTimeSummaryIndex";
@@ -42,11 +46,11 @@ public final class APIUsageStatisticsClientConstants {
 
     public static final String KEY_USAGE_MONTH_SUMMARY = "API_REQUEST_MONTHLY_SUMMARY";
 
-    public static final String MONTH= "month";
+    public static final String MONTH = "month";
 
-    public static final String  API_FAULT_SUMMARY = " API_FAULT_SUMMARY";
+    public static final String API_FAULT_SUMMARY = " API_FAULT_SUMMARY";
 
-	public static final String  API_REQUEST_TIME_FAULT_SUMMARY = "API_REQUEST_TIME_FAULT_SUMMARY";
+    public static final String API_REQUEST_TIME_FAULT_SUMMARY = "API_REQUEST_TIME_FAULT_SUMMARY";
 
     public static final String KEY_USAGE_SUMMARY_INDEX = "KeyUsageSummaryIndex";
 
@@ -64,44 +68,44 @@ public final class APIUsageStatisticsClientConstants {
 
     public static final String VERSION = "version";
 
-    public static final String METHOD= "method";
-    
-    public static final String CONTEXT= "context";
-    
+    public static final String METHOD = "method";
+
+    public static final String CONTEXT = "context";
+
     public static final String RESPONSE = "total_response_count";
 
-	public static final String INVOCATION_TIME = "requesttime";
+    public static final String INVOCATION_TIME = "requesttime";
 
     public static final String FAULT = "total_fault_count";
 
     public static final String REQUEST_TIME = "max_request_time";
 
     public static final String CONSUMER_KEY = "CONSUMERKEY";
-    
+
     public static final String USER_ID = "userid";
 
-    public static final String YEAR= "year";
+    public static final String YEAR = "year";
 
-    public static final String DAY= "day";
+    public static final String DAY = "day";
 
-    public static final String TIME= "time";
-    
-    public static final String DESTINATION= "destination";
+    public static final String TIME = "time";
+
+    public static final String DESTINATION = "destination";
 
     public static final int DEFAULT_RESULTS_LIMIT = 10;
-    
+
     public static final String ALL_PROVIDERS = "__all_providers__";
 
     public static final String API_USAGE_TRACKING = "APIUsageTracking.";
 
-    public static final String API_USAGE_JDBC_DRIVER =  API_USAGE_TRACKING + "JDBCDriver";
+    public static final String API_USAGE_JDBC_DRIVER = API_USAGE_TRACKING + "JDBCDriver";
 
-    public static final String API_USAGE_JDBC_URL =  API_USAGE_TRACKING + "JDBCUrl";
+    public static final String API_USAGE_JDBC_URL = API_USAGE_TRACKING + "JDBCUrl";
 
-    public static final String API_USAGE_JDBC_UserName =  API_USAGE_TRACKING + "JDBCUserName";
+    public static final String API_USAGE_JDBC_UserName = API_USAGE_TRACKING + "JDBCUserName";
 
-    public static final String API_USAGE_JDBC_Password =  API_USAGE_TRACKING + "JDBCPassword";
-    
+    public static final String API_USAGE_JDBC_Password = API_USAGE_TRACKING + "JDBCPassword";
+
     public static final String API_USAGEBY_DESTINATION_SUMMARY = "API_DESTINATION_SUMMARY";
 
 }
