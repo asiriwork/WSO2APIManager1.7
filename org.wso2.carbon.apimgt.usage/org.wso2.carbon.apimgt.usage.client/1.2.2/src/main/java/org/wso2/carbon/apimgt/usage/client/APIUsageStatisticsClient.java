@@ -262,8 +262,8 @@ public class APIUsageStatisticsClient {
                     Boolean count = false;
                     for (AppCallTypeDTO usageDTO : appApiCallTypeList) {
                         if (usageDTO.getconsumerKey().equals(consumerKey) && usageDTO.getApiName().equals(api)) {
-                            if (!usageDTO.getCallType().contains(usage.callType)) {
-                                usageDTO.getCallType().add(usage.callType);
+                            if (!usageDTO.getCallType().contains(usage.resource + " (" + usage.callType + ")")) {
+                                usageDTO.getCallType().add(usage.resource + " (" + usage.callType + ")");
 
 
                             }
@@ -274,7 +274,7 @@ public class APIUsageStatisticsClient {
                     }
                     if (!count) {
                         List<String> callType = new ArrayList<String>();
-                        callType.add(usage.callType);
+                        callType.add(usage.resource + " (" + usage.callType + ")");
                         appCallTypeDTO = new AppCallTypeDTO();
                         appCallTypeDTO.setApiName(api);
                         appCallTypeDTO.setappName(subscriberAppsMap.get(consumerKey));
@@ -2073,6 +2073,7 @@ public class APIUsageStatisticsClient {
         private String apiName;
         private String callType;
         private String consumerKey;
+        private String resource;
 
         public AppCallType(OMElement row) {
             apiName = row.getFirstChildWithName(new QName(
@@ -2081,36 +2082,10 @@ public class APIUsageStatisticsClient {
                     APIUsageStatisticsClientConstants.CONSUMERKEY)).getText();
             callType = row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.METHOD)).getText();
+            resource = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.RESOURCE)).getText();
         }
     }
-
-//    private static class APIResponseFaultCount {
-//
-//        private String apiName;
-//        private String apiVersion;
-//        private String context;
-//        private String requestTime;
-//        private long faultCount;
-//
-//        public APIResponseFaultCount(OMElement row) {
-//            apiName = row.getFirstChildWithName(new QName(
-//                    APIUsageStatisticsClientConstants.API)).getText();
-//            apiVersion = row.getFirstChildWithName(new QName(
-//                    APIUsageStatisticsClientConstants.VERSION)).getText();
-//            context = row.getFirstChildWithName(new QName(
-//                    APIUsageStatisticsClientConstants.CONTEXT)).getText();
-//            OMElement invocationTimeEle = row.getFirstChildWithName(new QName(
-//                    APIUsageStatisticsClientConstants.INVOCATION_TIME));
-//            OMElement faultCountEle = row.getFirstChildWithName(new QName(
-//                    APIUsageStatisticsClientConstants.FAULT));
-//            if (invocationTimeEle != null) {
-//                requestTime = invocationTimeEle.getText();
-//            }
-//            if (faultCountEle != null) {
-//                faultCount = (long) Double.parseDouble(faultCountEle.getText());
-//            }
-//        }
-//    }
 
     private static class APIUsage {
 
