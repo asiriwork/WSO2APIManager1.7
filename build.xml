@@ -29,8 +29,8 @@
  -->
 
 
-<!-- 
 
+<!-- 
   <copy file="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/pages/statistics.jag" tofile="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/pages/statistics.jag" overwrite="true"/>
 
 

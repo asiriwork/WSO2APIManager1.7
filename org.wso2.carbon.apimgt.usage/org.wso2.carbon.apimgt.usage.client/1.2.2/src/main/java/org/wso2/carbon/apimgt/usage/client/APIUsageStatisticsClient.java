@@ -341,7 +341,7 @@ public class APIUsageStatisticsClient {
             String query;
 
 
-            query = "SELECT CONSUMER_KEY , AUTHZ_USER FROM IDN_OAUTH2_ACCESS_TOKEN GROUP BY CONSUMER_KEY  ";
+            query = "SELECT CONSUMER_KEY , AUTHZ_USER FROM IDN_OAUTH2_ACCESS_TOKEN GROUP BY CONSUMER_KEY,AUTHZ_USER   ";
 
 
             rs = statement.executeQuery(query);

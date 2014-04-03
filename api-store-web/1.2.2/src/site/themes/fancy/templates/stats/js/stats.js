@@ -234,7 +234,13 @@ var drawTopAppUsers = function(from,to){
                 var length = json.usage.length;
                 $('#topAppUsersTable').show();
                 for (var i = 0; i < json.usage.length; i++) {
-                    $('#topAppUsersTable').append($('<tr><td>' + json.usage[i].app + '</td><td>' + json.usage[i].user + '</td><td class="tdNumberCell">' + json.usage[i].count + '</td></tr>'));
+                    $('#topAppUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userCountArray[0].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[0].count + '</td></tr>'));
+                     if(json.usage[i].userCountArray.length > 1){
+                        for (var j =1 ; j < json.usage[i].userCountArray.length; j++) {
+                             $('#topAppUsersTable').append($('<tr><td>' + "" + '</td><td>' + json.usage[i].userCountArray[j].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[j].count + '</td></tr>'));
+                   
+                        } 
+                    }
                 }
                 if (length == 0) {
                     $('#topAppUsersTable').hide();
@@ -268,11 +274,8 @@ var drawAppUsers = function(from,to){
                 var length = json.usage.length;
                 $('#appUsersTable').show();
                 for (var i = 0; i < json.usage.length; i++) {
-                    $('#appUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userArray[0] + '</td></tr>'));
-                        if(json.usage[i].userArray.length > 1){
-                     for (var j =1 ; j < json.usage[i].userArray.length; j++) {
-                         $('#PerAppAPIFaultCountTable').append($('<tr><td>' + "" + '</td><td>' + "" + '</td><td class="tdNumberCell">' + json.usage[i].userArray[j] + '</td></tr>'));
-                } }
+                    $('#appUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userArray.length + '</td></tr>'));
+                   
                 }
                 if (length == 0) {
                     alert("drawAppUsers length 0");

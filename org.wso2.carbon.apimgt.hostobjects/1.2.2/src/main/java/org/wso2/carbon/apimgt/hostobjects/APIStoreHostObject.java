@@ -188,8 +188,7 @@ public class APIStoreHostObject extends ScriptableObject {
                 perAPICallType.put("apiName", perAPICallType, appCallTypeDTO.getApiName());
                 perAPICallType.put("callType", perAPICallType, callType);
 
-                //  String APPNAME = apiUsage.getappName();
-
+          
                 if (appCallTypeUsageMap.containsKey(appCallTypeDTO.getappName()) && appCallTypeUsageMap != null) {
                     NativeArray apiCallType = appCallTypeUsageMap.get(appCallTypeDTO.getappName());
 
@@ -376,18 +375,49 @@ public class APIStoreHostObject extends ScriptableObject {
         if (list != null) {
             it = list.iterator();
         }
+
         int i = 0;
         if (it != null) {
+            // Sort API Usage by Application Name
+            NativeObject userCount;
+
+
+            List<String> appNames = new ArrayList<String>();
+            List<NativeArray> appUsageList = new ArrayList<NativeArray>();
+
             while (it.hasNext()) {
+                AppUsageDTO appUsageDTO = (AppUsageDTO) it.next();
+                userCount = new NativeObject();
+
+
+                userCount.put("user", userCount, appUsageDTO.getUserid());
+                userCount.put("count", userCount, appUsageDTO.getCount());
+
+
+                if (appNames.contains(appUsageDTO.getappName())) {
+
+                    int index = appNames.indexOf(appUsageDTO.getappName());
+                    NativeArray userCountList = appUsageList.get(index);
+
+                    userCountList.put(userCountList.size(), userCountList, userCount);
+                } else {
+                    appNames.add(appUsageDTO.getappName());
+                    NativeArray userCountList = new NativeArray(0);
+                    userCountList.put(0, userCountList, userCount);
+                    appUsageList.add(userCountList);
+
+                }
+            }
+
+            for (String appName : appNames) {
                 NativeObject row = new NativeObject();
-                Object usageObject = it.next();
-                AppUsageDTO usage = (AppUsageDTO) usageObject;
-                row.put("app", row, usage.getappName());
-                row.put("user", row, usage.getUserid());
-                row.put("count", row, usage.getCount());
+                row.put("appName", row, appName);
+                row.put("userCountArray", row, appUsageList.get(i));
+
                 myn.put(i, myn, row);
                 i++;
             }
+
         }
         return myn;
     }

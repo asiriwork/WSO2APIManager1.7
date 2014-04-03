@@ -120,7 +120,7 @@
                  <table class="table graphTable" id="appUsersTable" style="display:none">
                     <tr>
                         <th><%="APPLICATION"%></th>
-                        <th><%=i18n.localize("subscriber")%></th>
+                        <th><%="NUMBER OF USERS"%></th>
                     </tr>
                  </table>
             </div>
