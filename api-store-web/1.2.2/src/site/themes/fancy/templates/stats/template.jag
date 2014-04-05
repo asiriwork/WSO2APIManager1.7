@@ -27,9 +27,9 @@
  </style>
 
 <div>
-    <h2>My Stats</h2>
+    <h2>Store Statistics</h2>
 
-    <h2>Test</h2>
+   
 </div>
 
 <div class="content-section shadow-up">
@@ -43,6 +43,36 @@
         </div>
         </div>
     </div>
+
+
+
+
+
+
+
+  <div class="well">
+        <div class="row-fluid">
+            <div class="span6">
+                <div id="apiChart">
+                    <div class="progress progress-striped active">
+                        <div class="bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                 <table class="table graphTable" id="apiTable" style="display:none;">
+                    <tr>
+                        <th><%=i18n.localize("apiName")%></th>
+                        <th><%=i18n.localize("noOfAPICalls")%></th>
+                    </tr>
+                 </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
     
     <h2><%="Per Application Per API Call Count"%></h2>
 
@@ -95,22 +125,7 @@
     </div>
 
 
-     <h2><%="Per Application Per API Fault Count"%></h2>
-
-    <div class="well">
-        <div class="row-fluid">
-            <div class="span11">
-                 <table class="table graphTable" id="PerAppAPIFaultCountTable" style="display:none">
-                    <tr>
-                        <th><%="APPLICATION"%></th>
-                        <th><%=i18n.localize("apiName")%></th>
-                        <th><%="NUMBER OF FAULT API CALLS"%></th>
-                    </tr>
-                 </table>
-            </div>
-        </div>
-    </div>
-
+   
      <h2><%="Registered Users For Applications"%></h2>
 
 
@@ -121,6 +136,22 @@
                     <tr>
                         <th><%="APPLICATION"%></th>
                         <th><%="NUMBER OF USERS"%></th>
+                    </tr>
+                 </table>
+            </div>
+        </div>
+    </div>
+
+      <h2><%="Per Application Per API Fault Count"%></h2>
+
+    <div class="well">
+        <div class="row-fluid">
+            <div class="span11">
+                 <table class="table graphTable" id="PerAppAPIFaultCountTable" style="display:none">
+                    <tr>
+                        <th><%="APPLICATION"%></th>
+                        <th><%=i18n.localize("apiName")%></th>
+                        <th><%="NUMBER OF FAULT API CALLS"%></th>
                     </tr>
                  </table>
             </div>

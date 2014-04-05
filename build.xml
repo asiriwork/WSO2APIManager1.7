@@ -18,38 +18,55 @@
 
     
 
-<!--       
+      
 
-     <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/" overwrite="true">
+  <!--    <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src"/>
   </copy>
-
-
 
  -->
 
 
 
-<!-- 
-  <copy file="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/pages/statistics.jag" tofile="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/pages/statistics.jag" overwrite="true"/>
+
+
+     <copy todir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/" overwrite="true">
+    <fileset dir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store"/>
+  </copy>
+
+
+
+
+
+ <!--  <copy file="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/pages/statistics.jag" tofile="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/pages/statistics.jag" overwrite="true"/>
 
 
  <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/modules/statistics/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/modules/statistics"/>
   </copy>
 
-  
-
+   -->
+<!-- 
    <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/themes/fancy/templates/stats/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/themes/fancy/templates/stats"/>
   </copy>
+
+  <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/themes/fancy/templates/" overwrite="true">
+    <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/themes/fancy/templates"/>
+  </copy> -->
+
+   <!-- <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/themes/" overwrite="true">
+    <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/themes"/>
+  </copy>
+ -->
+
 
 
  <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/blocks/stats/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/blocks/stats"/>
   </copy>
 
- -->
+
    
     
 </project>
