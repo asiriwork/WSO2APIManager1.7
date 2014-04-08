@@ -2,7 +2,8 @@ var t_on = {
     'apiChart':1,
     'subsChart':1,
     'serviceTimeChart':1,
-    'tempLoadingSpace':1
+    'tempLoadingSpace':1,
+    'subsChart':1
 };
 var currentLocation;
 
@@ -54,6 +55,7 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
                         drawAppAPICallType(from,to); 
                         // drawAPIResponseFaultCountChart(from,to);
                         drawGraphAPIUsage(from,to);
+                        drawRegisteredUserCountByApplications(from,to);
 
                        
 
@@ -85,7 +87,183 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 });
 
 
+
+
+
+
+
+var drawRegisteredUserCountByApplications = function(from,to){
+  var fromDate = from;
+    var toDate = to;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getPerAppSubscribers",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
+        function (json) {
+            if (!json.error) {
+                var length = json.usage.length,data = [];
+                if (length > 0) {
+                    $('#subsChart').empty();
+                    var easyPieChartDefaults = {
+                        animate: 2000,
+                        scaleColor: false,
+                        lineWidth: 12,
+                        lineCap: 'square',
+                        size: 100,
+                        trackColor: '#e5e5e5'
+                    }
+                    var allSubscriptionCount = 0;
+                    for (var i = 0; i < length; i++) {
+                        allSubscriptionCount+=json.usage[i].userArray.length;
+                    }
+                    for (var i = 0; i < length; i++) {
+                        var k = i+1;
+                        var chartId = "easyPieChart"+k;
+                        var chartVal = Math.round((json.usage[i].userArray.length/ allSubscriptionCount)*100);
+                        $('#subsChart').append("<div class='span2 easyPieWrapper'>" +
+                            "<div style='color:"+chartColorScheme1[i]+"' data-percent='"+chartVal+"' id='"+chartId+"'>"+chartVal+"% </div>" +
+                            "<b>"+json.usage[i].appName+"</b><br /><i>"+json.usage[i].userArray.length+" User(s)</i></div>");
+                      
+                        $('#'+chartId+'').easyPieChart({
+                            animate: 2000,
+                            scaleColor: false,
+                            lineWidth: 12,
+                            lineCap: 'square',
+                            size: 110,
+                            trackColor: '#e5e5e5',
+                            barColor: chartColorScheme1[i]
+                        });
+                    }
+                }
+
+
+
+            } else {
+                if (json.message == "AuthenticateError") {
+                    jagg.showLogin();
+                } else {
+                    jagg.message({content:json.message,type:"error"});
+                }
+            }
+            t_on['subsChart'] = 0;
+        }, "json");
+}
+
+
 var drawGraphAPIUsage = function(from,to){
+
+    var fromDate = from;
+    var toDate = to;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIUsage",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
+        function (json) {
+            if (!json.error) {
+                var lentth1 = json.usage.length;
+                $('#ok').empty();
+                for(var k=0 ; k<lentth1 ;k++){
+
+                     $('#ok').append($('<div class="well"><div class="row-fluid"> <h3>Aplication Name:  '+json.usage[k].appName+'</h3><div class="span6" style="height:350px; width :350px"><div id="apiChart'+(k+1)+'" style="height:350px;"><div class="progress progress-striped active"><div class="bar" style="width: 10%;"></div></div></div> </div> <div class="span6"> <table class="table graphTable" id="apiTable'+(k+1)+'" style="display:none;"><tr> <th>'+ i18n.t("apiName")+'</th><th>'+ i18n.t("noOfAPICalls")+'</th></tr> </table> </div></div></div>'));
+             } for(var k=0 ; k<lentth1 ;k++){
+                var length = json.usage[k].apiCountArray.length,data = [];
+
+                $('#apiTable'+(k+1)).find("tr:gt(0)").remove();
+                $('#apiChart'+(k+1)).empty();
+                for (var i = 0; i < length; i++) {
+                    data[i] = [ json.usage[k].apiCountArray[i].apiName, parseInt( json.usage[k].apiCountArray[i].count )];
+                    $('#apiTable'+(k+1)).append($('<tr><td>' +  json.usage[k].apiCountArray[i].apiName + '</td><td class="tdNumberCell">' +json.usage[k].apiCountArray[i].count + '</td></tr>'));
+
+                }
+
+                if (length > 0) {
+                    $('#apiTable'+(k+1)).show();
+                    require([
+                        // Require the basic chart class
+                        "dojox/charting/Chart",
+
+                        // Require the theme of our choosing
+                        "dojox/charting/themes/Claro",
+
+                        // Charting plugins:
+
+                        //  We want to plot a Pie chart
+                        "dojox/charting/plot2d/Pie",
+
+                        // Retrieve the Legend, Tooltip, and MoveSlice classes  
+                        "dojox/charting/action2d/Tooltip",
+                        "dojox/charting/action2d/MoveSlice",
+
+                        //  We want to use Markers
+                        "dojox/charting/plot2d/Markers",
+
+                        //  We'll use default x/y axes
+                        "dojox/charting/axis2d/Default"
+                    ], function(Chart, theme, Pie, Tooltip, MoveSlice) {                                             
+
+                        // Create the chart within it's "holding" node
+                        var apiUsageChart = new Chart("apiChart"+(k+1));
+
+                        // Set the theme
+                        apiUsageChart.setTheme(theme);
+
+                        // Add the only/default plot
+                        apiUsageChart.addPlot("default", {
+                            type: Pie,
+                            markers: true,
+                            radius:130
+                        });
+
+                        // Add axes
+                        apiUsageChart.addAxis("x");
+                        apiUsageChart.addAxis("y", { min: 5000, max: 30000, vertical: true, fixLower: "major", fixUpper: "major" });
+
+                        // Define the data
+                        var chartData; var color = -1;
+                        require(["dojo/_base/array"], function(array){
+                            chartData= array.map(data, function(d){
+                                color++;
+                                return {y: d[1], tooltip: "<b>"+d[0]+"</b><br /><i>"+d[1]+" call(s)</i>",fill:chartColorScheme1[color]};
+
+                            });
+                        });
+
+                        apiUsageChart.addSeries("API Usage",chartData);
+                      //  apiUsageChart.addSeries("API Usage", [1, 2, 0.5, 1.5, 1, 2.8, 0.4])
+                        //.addSeries("Series B", [2.6, 1.8, 2, 1, 1.4, 0.7, 2])
+                        //.addSeries("Series C", [6.3, 1.8, 3, 0.5, 4.4, 2.7, 2])
+
+
+                        // Create the tooltip
+                        var tip = new Tooltip(apiUsageChart,"default");
+
+                        // Create the slice mover
+                        var mag = new MoveSlice(apiUsageChart,"default");
+
+                        // Render the chart!
+                        apiUsageChart.render();
+
+
+
+                    });
+
+                } else {
+                    // $('#apiTable').hide();
+                    // $('#apiChart').css("fontSize", 14);
+                    // $('#apiChart').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
+                }
+            // });
+
+            }
+            } else {
+                if (json.message == "AuthenticateError") {
+                    jagg.showLogin();
+                } else {
+                    jagg.message({content:json.message,type:"error"});
+                }
+            }
+            t_on['apiChart'] = 0;
+        }, "json");
+}
+
+
+
+
+var drawGraphAPIUsage1 = function(from,to){
 
     var fromDate = from;
     var toDate = to;
@@ -190,117 +368,6 @@ var drawGraphAPIUsage = function(from,to){
         }, "json");
 }
 
-
-
-// var drawAPIResponseFaultCountChart = function(from,to){
-//     var fromDate = from;
-//     var toDate = to;
-//     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getPerAppAPIFaultCount",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate },
-//         function (json) {
-//             if (!json.error) {
-//                 var length = json.usage.length,s1 = [];
-//                 $('#faultyCountChart').empty();
-//                 var data = [];
-//                 for (var i = 0; i < length; i++) {
-//                     data[i] = [json.usage[i].apiCountArray[0].apiName, parseFloat( json.usage[i].apiCountArray[0].count)];
-//                     //add fake value to overcome dojo chart single series issue
-//                     if(length === 1){
-//                         data.push(["",0]);
-//                     }
-//                 }
-//                 if (length > 0) {
-//                     /*var width = 300;
-//                      if (30 * length > 300) width = 35 * length;
-//                      $('#faultyCountChart').width(width);*/
-//                     require([
-//                         // Require the basic chart class
-//                         "dojox/charting/Chart",
-
-//                         // Require the theme of our choosing
-//                         "dojox/charting/themes/ApimDefault",
-
-//                         // Tooltip
-//                         "dojox/charting/action2d/Tooltip",
-//                         // Require the highlighter
-//                         "dojox/charting/action2d/Highlight",
-
-//                         //  We want to plot Columns
-//                         "dojox/charting/plot2d/Columns",
-
-//                         //  We want to use Markers
-//                         "dojox/charting/plot2d/Markers",
-
-//                         //  We'll use default x/y axes
-//                         "dojox/charting/axis2d/Default",
-
-//                         //mouse zoom and pan
-//                         "dojox/charting/action2d/MouseZoomAndPan",
-
-//                         // Wait until the DOM is ready
-//                         "dojo/domReady!"
-//                     ], function(Chart, theme,MouseZoomAndPan,Highlight) {
-
-
-
-
-//                         // Create the chart within it's "holding" node
-//                         var faultyCountChart = new Chart("faultyCountChart");
-
-//                         // Set the theme
-//                         faultyCountChart.setTheme(theme);
-
-//                         // Add the only/default plot
-//                         faultyCountChart.addPlot("default", {
-//                             type: "Columns",
-//                             markers: true,
-//                             gap: 5,
-//                             animate:{duration:1000}
-//                         });
-
-//                         // Add axes
-//                         faultyCountChart.addAxis("x", { labels:dojo.map(data, function(value, index){
-//                             return {value: index + 1, text: value[0]};
-//                         })
-//                         });
-//                         faultyCountChart.addAxis("y",{vertical:true,fixLower: "major", fixUpper: "major"});
-
-//                         // Define the data
-//                         var chartData; var color = -1;
-//                         require(["dojo/_base/array"], function(array){
-//                             chartData= array.map(data, function(d){
-//                                 color++;
-//                                 return {y: d[1],text:d[0], tooltip: "<b>"+d[0]+"</b><br /><i>"+d[1]+" call(s)</i>",fill:chartColorScheme2[color]};
-//                             });
-//                         });
-
-//                         // Add the series of data
-//                         faultyCountChart.addSeries("API Service Time",chartData);
-
-//                         new MouseZoomAndPan(faultyCountChart, "default", { axis: "x"});
-
-//                         new Highlight(faultyCountChart,"default");
-
-//                         // Render the chart!
-//                         faultyCountChart.render();
-
-//                     });
-
-//                 } else {
-//                     $('#faultyCountChart').css("fontSize", 14);
-//                     $('#faultyCountChart').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
-//                 }
-
-
-//             } else {
-//                 if (json.message == "AuthenticateError") {
-//                     jagg.showLogin();
-//                 } else {
-//                     jagg.message({content:json.message,type:"error"});
-//                 }
-//             }
-//             t_on['faultyCountChart'] = 0;
-//         }, "json");
-// }
 
 
 
@@ -485,6 +552,9 @@ var drawTopAppUsers = function(from,to){
 
 
 
+
+
+
 var drawAppUsers = function(from,to){
     var fromDate = from;
     var toDate = to;
@@ -522,11 +592,14 @@ var drawAppUsers = function(from,to){
 
 
 
+
 var convertTimeString = function(date){
     var d = new Date(date);
     var formattedDate = d.getFullYear() + "-" + formatTimeChunk((d.getMonth()+1)) + "-" + formatTimeChunk(d.getDate());
     return formattedDate;
 };
+
+
 
 var convertTimeStringPlusDay = function(date){
     var d = new Date(date);

@@ -17,8 +17,8 @@
       <copy file="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/org.wso2.carbon.apimgt.hostobjects/1.2.2/target/org.wso2.carbon.apimgt.hostobjects-1.2.2.jar" tofile="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/components/patches/patch0005/org.wso2.carbon.apimgt.hostobjects-1.2.2.jar" overwrite="true"/>
 
     
-
-      
+<!-- To 1.7 API manager
+       -->
 
   <!--    <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src"/>
@@ -27,6 +27,8 @@
  -->
 
 
+
+<!-- COPY TO PROJECT UPDATE PROJECT -->
 
 
 
@@ -62,9 +64,9 @@
 
 
 
- <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/blocks/stats/" overwrite="true">
+<!--  <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/site/blocks/stats/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/site/blocks/stats"/>
-  </copy>
+  </copy> -->
 
 
    

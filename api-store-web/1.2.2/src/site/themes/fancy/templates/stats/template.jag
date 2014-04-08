@@ -44,12 +44,49 @@
         </div>
     </div>
 
+   <h2><%="Registered User Count Per Application"%></h2>
+<div class="well">
+    <div class="row-fluid">
+    <div class="span12">
+        <div id="subsChart">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 10%;"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 
 
 
+<!-- 
+  <div class="well"> -->
+  <!--       <div class="row-fluid"> -->
+        <div id="ok">
+          <!--  <div class="progress progress-striped active">
+                        <div class="bar" style="width: 10%;"></div> -->
+          <!--   <div class="span6">
+                <div id="apiChart">
+                    <div class="progress progress-striped active">
+                        <div class="bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                 <table class="table graphTable" id="apiTable" style="display:none;">
+                    <tr>
+                        <th><%=i18n.localize("apiName")%></th>
+                        <th><%=i18n.localize("noOfAPICalls")%></th>
+                    </tr>
+                 </table>
+            </div>
+ -->
+            </div>
+      <!--   </div> -->
+ <!--    </div> -->
 
 
-
+<!-- 
   <div class="well">
         <div class="row-fluid">
             <div class="span6">
@@ -70,8 +107,7 @@
         </div>
     </div>
 
-
-
+ -->
 
     
     <h2><%="Per Application Per API Call Count"%></h2>
@@ -132,12 +168,15 @@
     <div class="well">
         <div class="row-fluid">
             <div class="span11">
+         
                  <table class="table graphTable" id="appUsersTable" style="display:none">
                     <tr>
                         <th><%="APPLICATION"%></th>
                         <th><%="NUMBER OF USERS"%></th>
                     </tr>
                  </table>
+
+            
             </div>
         </div>
     </div>
