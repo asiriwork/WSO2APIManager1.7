@@ -1,6 +1,7 @@
 var t_on = {
     'apiChart':1,
     'subsChart':1,
+    'userChart':1,
     'serviceTimeChart':1,
     'tempLoadingSpace':1,
     'subsChart':1
@@ -17,7 +18,7 @@ currentLocation=window.location.pathname;
 require(["dojo/dom", "dojo/domReady!"], function(dom){
     currentLocation=window.location.pathname;
     //Initiating the fake progress bar
-    jagg.fillProgress('apiChart');jagg.fillProgress('subsChart');jagg.fillProgress('serviceTimeChart');jagg.fillProgress('tempLoadingSpace');
+    jagg.fillProgress('apiChart');jagg.fillProgress('userChart');jagg.fillProgress('subsChart');jagg.fillProgress('serviceTimeChart');jagg.fillProgress('tempLoadingSpace');
 
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getFirstAccessTime",currentLocation:currentLocation  },
         function (json) {            
@@ -54,8 +55,9 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
                         drawAPIResponseFaultCountTable(from,to);
                         drawAppAPICallType(from,to); 
                         // drawAPIResponseFaultCountChart(from,to);
-                        drawGraphAPIUsage(from,to);
+                      //  drawGraphAPIUsage(from,to);
                         drawRegisteredUserCountByApplications(from,to);
+                        drawTopUsersGraph(from,to);
 
                        
 
@@ -82,9 +84,172 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
                 }
             }
             t_on['apiChart'] = 0;
+            t_on['userChart'] = 1;
         }, "json");
 
 });
+
+
+var drawTopUsersGraph = function(from,to){
+
+    var fromDate = from;
+    var toDate = to;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getTopAppUsers",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
+        function (json) {
+            if (!json.error) {
+                var lentth1 = json.usage.length;
+                $('#ok1').empty();
+                for(var k=0 ; k<lentth1 ;k++){
+
+                     $('#ok1').append($('<div class="well"><div class="row-fluid"> <h3>Aplication Name:  '+json.usage[k].appName+'</h3><div class="span6" style="height:350px; width :350px"><div id="userChart'+(k+1)+'" style="height:350px;"><div class="progress progress-striped active"><div class="bar" style="width: 10%;"></div></div></div> </div> <div class="span6"> <table class="table graphTable" id="userTable'+(k+1)+'" style="display:none;"><tr> <th>'+ i18n.t("apiName")+'</th><th>'+ i18n.t("noOfAPICalls")+'</th></tr> </table> </div></div></div>'));
+             } for(var k=0 ; k<lentth1 ;k++){
+                var length = json.usage[k].userCountArray.length,data = [];
+
+                $('#userTable'+(k+1)).find("tr:gt(0)").remove();
+                $('#userChart'+(k+1)).empty();
+                for (var i = 0; i < length; i++) {
+                    data[i] = [ json.usage[k].userCountArray[i].user, parseInt( json.usage[k].userCountArray[i].count )];
+                    $('#userTable'+(k+1)).append($('<tr><td>' +  json.usage[k].userCountArray[i].user + '</td><td class="tdNumberCell">' +json.usage[k].userCountArray[i].count + '</td></tr>'));
+
+                }
+
+                if (length > 0) {
+                    $('#userTable'+(k+1)).show();
+                    require([
+                        // Require the basic chart class
+                        "dojox/charting/Chart",
+
+                        // Require the theme of our choosing
+                        "dojox/charting/themes/Claro",
+
+                        // Charting plugins:
+
+                        //  We want to plot a Pie chart
+                        "dojox/charting/plot2d/Pie",
+
+                        // Retrieve the Legend, Tooltip, and MoveSlice classes  
+                        "dojox/charting/action2d/Tooltip",
+                        "dojox/charting/action2d/MoveSlice",
+
+                        //  We want to use Markers
+                        "dojox/charting/plot2d/Markers",
+
+                        //  We'll use default x/y axes
+                        "dojox/charting/axis2d/Default"
+                    ], function(Chart, theme, Pie, Tooltip, MoveSlice) {                                             
+
+                        // Create the chart within it's "holding" node
+                        var userUsageChart = new Chart("userChart"+(k+1));
+
+                        // Set the theme
+                        userUsageChart.setTheme(theme);
+
+                        // Add the only/default plot
+                        userUsageChart.addPlot("default", {
+                            type: Pie,
+                            markers: true,
+                            radius:130
+                        });
+
+                        // Add axes
+                        userUsageChart.addAxis("x");
+                        userUsageChart.addAxis("y", { min: 5000, max: 30000, vertical: true, fixLower: "major", fixUpper: "major" });
+
+                        // Define the data
+                        var chartData; var color = -1;
+                        require(["dojo/_base/array"], function(array){
+                            chartData= array.map(data, function(d){
+                                color++;
+                                return {y: d[1], tooltip: "<b>"+d[0]+"</b><br /><i>"+d[1]+" call(s)</i>",fill:chartColorScheme1[color]};
+
+                            });
+                        });
+
+                        userUsageChart.addSeries("API Usage",chartData);
+                      //  userUsageChart.addSeries("API Usage", [1, 2, 0.5, 1.5, 1, 2.8, 0.4])
+                        //.addSeries("Series B", [2.6, 1.8, 2, 1, 1.4, 0.7, 2])
+                        //.addSeries("Series C", [6.3, 1.8, 3, 0.5, 4.4, 2.7, 2])
+
+
+                        // Create the tooltip
+                        var tip = new Tooltip(userUsageChart,"default");
+
+                        // Create the slice mover
+                        var mag = new MoveSlice(userUsageChart,"default");
+
+                        // Render the chart!
+                        userUsageChart.render();
+
+
+
+                    });
+
+                } else {
+                    // $('#userTable').hide();
+                    // $('#userChart').css("fontSize", 14);
+                    // $('#userChart').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
+                }
+            // });
+
+            }
+            } else {
+                if (json.message == "AuthenticateError") {
+                    jagg.showLogin();
+                } else {
+                    jagg.message({content:json.message,type:"error"});
+                }
+            }
+            t_on['userChart'] = 0;
+        }, "json");
+}
+
+
+
+
+
+
+
+var drawTopAppUsers = function(from,to){
+
+    var fromDate = from;
+    var toDate = to;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getTopAppUsers",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
+        function (json) {
+            if (!json.error) {
+                //last access table remove ??
+                $('#topAppUsersTable').find("tr:gt(0)").remove();
+                var length = json.usage.length;
+                $('#topAppUsersTable').show();
+                for (var i = 0; i < json.usage.length; i++) {
+                    $('#topAppUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userCountArray[0].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[0].count + '</td></tr>'));
+                     if(json.usage[i].userCountArray.length > 1){
+                        for (var j =1 ; j < json.usage[i].userCountArray.length; j++) {
+                             $('#topAppUsersTable').append($('<tr><td>' + "" + '</td><td>' + json.usage[i].userCountArray[j].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[j].count + '</td></tr>'));
+                   
+                        } 
+                    }
+                }
+                if (length == 0) {
+                    $('#topAppUsersTable').hide();
+                    $('#tempLoadingSpace').html('');
+                    $('#tempLoadingSpace').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
+
+                }else{
+                    $('#tempLoadingSpace').hide();
+                }
+
+            } else {
+                if (json.message == "AuthenticateError") {
+                    jagg.showLogin();
+                } else {
+                    jagg.message({content:json.message,type:"error"});
+                }
+            }
+            t_on['tempLoadingSpace'] = 0;
+        }, "json");
+}
+
+
 
 
 
@@ -113,6 +278,7 @@ var drawRegisteredUserCountByApplications = function(from,to){
                     for (var i = 0; i < length; i++) {
                         allSubscriptionCount+=json.usage[i].userArray.length;
                     }
+              
                     for (var i = 0; i < length; i++) {
                         var k = i+1;
                         var chartId = "easyPieChart"+k;
@@ -263,112 +429,6 @@ var drawGraphAPIUsage = function(from,to){
 
 
 
-var drawGraphAPIUsage1 = function(from,to){
-
-    var fromDate = from;
-    var toDate = to;
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIUsage",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
-        function (json) {
-            if (!json.error) {
-                var length = json.usage[1].apiCountArray.length,data = [];
-                $('#apiChart').empty();
-                $('#apiTable').find("tr:gt(0)").remove();
-                for (var i = 0; i < length; i++) {
-                    data[i] = [ json.usage[1].apiCountArray[i].apiName, parseInt( json.usage[1].apiCountArray[i].count )];
-                    $('#apiTable').append($('<tr><td>' +  json.usage[1].apiCountArray[i].apiName + '</td><td class="tdNumberCell">' +json.usage[1].apiCountArray[i].count + '</td></tr>'));
-
-                }
-
-                if (length > 0) {
-                    $('#apiTable').show();
-                    require([
-                        // Require the basic chart class
-                        "dojox/charting/Chart",
-
-                        // Require the theme of our choosing
-                        "dojox/charting/themes/Claro",
-
-                        // Charting plugins:
-
-                        //  We want to plot a Pie chart
-                        "dojox/charting/plot2d/Pie",
-
-                        // Retrieve the Legend, Tooltip, and MoveSlice classes  
-                        "dojox/charting/action2d/Tooltip",
-                        "dojox/charting/action2d/MoveSlice",
-
-                        //  We want to use Markers
-                        "dojox/charting/plot2d/Markers",
-
-                        //  We'll use default x/y axes
-                        "dojox/charting/axis2d/Default"
-                    ], function(Chart, theme, Pie, Tooltip, MoveSlice) {                                             
-
-                        // Create the chart within it's "holding" node
-                        var apiUsageChart = new Chart("apiChart");
-
-                        // Set the theme
-                        apiUsageChart.setTheme(theme);
-
-                        // Add the only/default plot
-                        apiUsageChart.addPlot("default", {
-                            type: Pie,
-                            markers: true,
-                            radius:130
-                        });
-
-                        // Add axes
-                        apiUsageChart.addAxis("x");
-                        apiUsageChart.addAxis("y", { min: 5000, max: 30000, vertical: true, fixLower: "major", fixUpper: "major" });
-
-                        // Define the data
-                        var chartData; var color = -1;
-                        require(["dojo/_base/array"], function(array){
-                            chartData= array.map(data, function(d){
-                                color++;
-                                return {y: d[1], tooltip: "<b>"+d[0]+"</b><br /><i>"+d[1]+" call(s)</i>",fill:chartColorScheme1[color]};
-
-                            });
-                        });
-
-                        apiUsageChart.addSeries("API Usage",chartData);
-                      //  apiUsageChart.addSeries("API Usage", [1, 2, 0.5, 1.5, 1, 2.8, 0.4])
-                        //.addSeries("Series B", [2.6, 1.8, 2, 1, 1.4, 0.7, 2])
-                        //.addSeries("Series C", [6.3, 1.8, 3, 0.5, 4.4, 2.7, 2])
-
-
-                        // Create the tooltip
-                        var tip = new Tooltip(apiUsageChart,"default");
-
-                        // Create the slice mover
-                        var mag = new MoveSlice(apiUsageChart,"default");
-
-                        // Render the chart!
-                        apiUsageChart.render();
-
-
-
-                    });
-
-                } else {
-                    $('#apiTable').hide();
-                    $('#apiChart').css("fontSize", 14);
-                    $('#apiChart').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
-                }
-
-
-            } else {
-                if (json.message == "AuthenticateError") {
-                    jagg.showLogin();
-                } else {
-                    jagg.message({content:json.message,type:"error"});
-                }
-            }
-            t_on['apiChart'] = 0;
-        }, "json");
-}
-
-
 
 
 
@@ -489,49 +549,6 @@ var drawAppAPIUsage = function(from,to){
                 }
                 if (length == 0) {
                     $('#lastAccessTable').hide();
-                    $('#tempLoadingSpace').html('');
-                    $('#tempLoadingSpace').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
-
-                }else{
-                    $('#tempLoadingSpace').hide();
-                }
-
-            } else {
-                if (json.message == "AuthenticateError") {
-                    jagg.showLogin();
-                } else {
-                    jagg.message({content:json.message,type:"error"});
-                }
-            }
-            t_on['tempLoadingSpace'] = 0;
-        }, "json");
-}
-
-
-
-
-var drawTopAppUsers = function(from,to){
-
-    var fromDate = from;
-    var toDate = to;
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getTopAppUsers",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
-        function (json) {
-            if (!json.error) {
-                //last access table remove ??
-                $('#topAppUsersTable').find("tr:gt(0)").remove();
-                var length = json.usage.length;
-                $('#topAppUsersTable').show();
-                for (var i = 0; i < json.usage.length; i++) {
-                    $('#topAppUsersTable').append($('<tr><td>' + json.usage[i].appName + '</td><td>' + json.usage[i].userCountArray[0].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[0].count + '</td></tr>'));
-                     if(json.usage[i].userCountArray.length > 1){
-                        for (var j =1 ; j < json.usage[i].userCountArray.length; j++) {
-                             $('#topAppUsersTable').append($('<tr><td>' + "" + '</td><td>' + json.usage[i].userCountArray[j].user + '</td><td class="tdNumberCell">' + json.usage[i].userCountArray[j].count + '</td></tr>'));
-                   
-                        } 
-                    }
-                }
-                if (length == 0) {
-                    $('#topAppUsersTable').hide();
                     $('#tempLoadingSpace').html('');
                     $('#tempLoadingSpace').append($('<span class="label label-info">'+i18n.t('errorMsgs.noData')+'</span>'));
 

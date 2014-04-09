@@ -20,23 +20,23 @@
 <!-- To 1.7 API manager
        -->
 
-  <!--    <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/" overwrite="true">
+     <copy todir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src"/>
   </copy>
 
- -->
+
 
 
 
 <!-- COPY TO PROJECT UPDATE PROJECT -->
 
-
+<!-- 
 
      <copy todir="/media/Ubuntu/wso2work/apim/apimcomponenets/turingapimgt/apimgt/api-store-web/1.2.2/src/" overwrite="true">
     <fileset dir="/media/Ubuntu/wso2work/products/wso2am-1.7.0/repository/deployment/server/jaggeryapps/store"/>
   </copy>
 
-
+ -->
 
 
 
