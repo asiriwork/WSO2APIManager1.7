@@ -97,7 +97,7 @@
                                                 <option value="text/plain">text/plain</option>
                                             </select>
                                         </div>
-                                        <div class="span7">
+                                        <div  class="span7">
                                             Set "Content-Type" header to overwrite this value.
                                         </div>
                                     </div>

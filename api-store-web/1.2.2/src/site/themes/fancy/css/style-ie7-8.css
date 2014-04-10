@@ -13,3 +13,13 @@
 .thumbnail-custom div.thumbnail {
     width: 130px;
 }
+#middle{
+    margin-top: 40px;
+}
+#middle div.title-section{
+    background: #ccc;
+    padding:5px;
+}
+.errorWrapper {
+    font-size: 1.4em;
+}

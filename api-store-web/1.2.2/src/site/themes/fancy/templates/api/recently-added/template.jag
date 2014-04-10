@@ -20,7 +20,7 @@
                            <div class="span4">
                                <img src="<%=thumbURL%>" width="70px"/>
                            </div>
-                           <div class="span7">
+                           <div  class="span7">
                                <a data-content="#tooltipcontentID1" href="<%=path%>" class="title" title="<%=api.name%>">
                                    <%=api.name%>-<%=api.version%></a>
                                <div><a class="item-provider"><%=api.provider%></a></div>

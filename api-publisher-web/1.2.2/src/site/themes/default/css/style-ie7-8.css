@@ -66,3 +66,10 @@ ul.breadcrumb {
 div.menu-back div.menu-content{
     margin-top: 7px !important;
 }
+.top-level-warning {
+    display: block;
+    font-size: 14px;
+    padding: 10px;
+    vertical-align: middle;
+    width: 98%;
+}

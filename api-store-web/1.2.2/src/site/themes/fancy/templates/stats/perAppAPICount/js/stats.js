@@ -16,6 +16,7 @@ var chartColorScheme2 = ["#ED2939","#E0115F","#E62020","#F2003C","#ED1C24","#CE2
 var chartColorScheme3 = ["#0099CC","#436EEE","#82CFFD","#33A1C9","#8DB6CD","#60AFFE","#7AA9DD","#104E8B","#7EB6FF","#4981CE","#2E37FE"];
 currentLocation=window.location.pathname;
 
+
 require(["dojo/dom", "dojo/domReady!"], function(dom){
     currentLocation=window.location.pathname;
     //Initiating the fake progress bar
@@ -52,9 +53,9 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 
              
                         drawGraphAPIUsage(from,to);
-                       
 
-                       
+
+                        console.info("drawGraphAPIUsage");
 
                         
                     });
@@ -64,11 +65,13 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 
                 }
                 else{
-                    $('#middle').html("");
-                    $('#middle').append($('<div class="errorWrapper"><span class="label top-level-warning"><i class="icon-warning-sign icon-white"></i>'
-                        // +i18n.t('errorMsgs.checkBAMConnectivity')+'</span><br/><img src="../themes/fancy/templates/stats/perAppAPICount/images/statsThumb.png" alt="Smiley face"></div>'));
-                     +i18n.t('errorMsgs.checkBAMConnectivity')+'</span><br/><img src="../images/statsThumb.png" alt="Smiley face"></div>'));
-                        console.log("sdfsdfsdfsdfsdfsdf");
+//
+
+                    $('#content').html("");
+                    $('#content').append($('<div class="errorWrapper"><span class="label top-level-warning"><i class="icon-warning-sign icon-white"></i>'
+                        +i18n.t('errorMsgs.checkBAMConnectivity')+'</span><br/><img src="../themes/fancy/templates/stats/perAppAPICount/images/statsThumb.png" alt="Smiley face"></div>'));
+
+
                 }
 
 
@@ -89,7 +92,7 @@ require(["dojo/dom", "dojo/domReady!"], function(dom){
 $(document).ready(function(){
     $(document).scroll(function(){
         var top=$(document).scrollTop();
-        console.info(top);
+       // console.info(top);
         var width = $("#rangeSliderWrapper").width();
         if(top > 180){
             $("#rangeSliderWrapper").css("position","fixed").css("top","30px").width(width);
@@ -107,7 +110,6 @@ $(document).ready(function(){
 var drawGraphAPIUsage = function(from,to){
 
 
-    console.log("sdfsdfsdfsdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsdfsdf");
     var fromDate = from;
     var toDate = to;
     jagg.post("/site/blocks/stats/perAppAPICount/ajax/stats.jag", { action:"getProviderAPIUsage",currentLocation:currentLocation,fromDate:fromDate,toDate:toDate  },
@@ -143,7 +145,7 @@ var drawGraphAPIUsage = function(from,to){
                         //  We want to plot a Pie chart
                         "dojox/charting/plot2d/Pie",
 
-                        // Retrieve the Legend, Tooltip, and MoveSlice classes  
+                        // Retrieve the Legend, Tooltip, and MoveSlice classes
                         "dojox/charting/action2d/Tooltip",
                         "dojox/charting/action2d/MoveSlice",
 
@@ -152,7 +154,7 @@ var drawGraphAPIUsage = function(from,to){
 
                         //  We'll use default x/y axes
                         "dojox/charting/axis2d/Default"
-                    ], function(Chart, theme, Pie, Tooltip, MoveSlice) {                                             
+                    ], function(Chart, theme, Pie, Tooltip, MoveSlice) {
 
                         // Create the chart within it's "holding" node
                         var apiUsageChart = new Chart("apiChart"+(k+1));

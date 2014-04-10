@@ -32,7 +32,7 @@
    
 </div>
 
-<div class="content-section shadow-up">
+<div id="content"  class="content-section shadow-up">
 <div class="content-data">
     <div id="rangeSliderWrapper" class="well">
         <div class="row-fluid">
