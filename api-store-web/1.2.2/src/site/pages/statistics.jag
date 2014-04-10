@@ -1,4 +1,7 @@
+
+
 <%
+
 include("/jagg/jagg.jag");
 include("header.jag");
 var site = require("/site/conf/site.json");
@@ -6,6 +9,9 @@ var site = require("/site/conf/site.json");
 var i18n = require("i18n");
 var localeResourcesBasePath="/site/conf/locales/jaggery/";
 i18n.init(request,localeResourcesBasePath);
+var stat;
+ stat = request.getParameter("stat");
+
 
 (function () {
     var user = jagg.getUser(),isCreatePermitted;
@@ -18,6 +24,20 @@ i18n.init(request,localeResourcesBasePath);
     //response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/index.jag"));
     //return;
     //}
+
+if(!stat){
+    stat = "appAPICount";
+}
+
+
+
+    var appAPICount = "appAPICount";
+    var topUsers = 'topUsers';
+    var perAppAPICount = 'perAppAPICount';
+    var apiCallType = 'apiCallType';
+    var faultCount = 'faultCount';
+    var response ='perAppAPICount';
+
     jagg.render({
         "name":"page/base",
         "inputs":{
@@ -30,8 +50,9 @@ i18n.init(request,localeResourcesBasePath);
                     "name":"layout/extended",
                     "inputs":{
                         "middle":{
-                            "name":"stats"
-
+                            
+                            "name":"stats/"+stat
+                               
                         }
                     }
                 }

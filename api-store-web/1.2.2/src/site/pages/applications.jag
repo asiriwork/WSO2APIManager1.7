@@ -44,7 +44,7 @@ var tenantDomain=getTenantDomain();
                         ],
                         "middle":[
                             {
-                                "name":"application/application-add",
+                                "name":"application/application-add/test",
                                 "inputs":{
                                     "apis":apis,
                                     "user":user
